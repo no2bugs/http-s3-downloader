@@ -97,10 +97,15 @@ def download_file(path,f_url,parallel=0,t_out=30,stack_trace=False,aws_a_key=Non
 
         print(time.strftime("%d/%m/%Y %H:%M:%S"))
         print('Starting download of {0} from {1}\nFile Path:    {2}'.format(file_name, url, file_path))
-        print('content type:',response.headers['content-type'])
-        print('encoding:    ',response.encoding)
 
-        file_size = convert_bytes(f_size=int(response.headers.get('content-length')))
+        file_size = None
+
+        try:
+            print('content type:',response.headers['content-type'])
+            print('encoding:    ',response.encoding)
+            file_size = convert_bytes(f_size=int(response.headers.get('content-length')))
+        except (AttributeError, KeyError, TypeError):
+            print('INFO: Unable to read some content headers')
 
         if not parallel:
             print('Downloading...')
